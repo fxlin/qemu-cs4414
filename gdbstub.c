@@ -910,10 +910,21 @@ static int gdb_read_register(CPUState *cpu, GByteArray *buf, int reg)
     CPUClass *cc = CPU_GET_CLASS(cpu);
     CPUArchState *env = cpu->env_ptr;
     GDBRegisterState *r;
+    
+    int ret = 0; 
 
-    if (reg < cc->gdb_num_core_regs) {
-        return cc->gdb_read_register(cpu, buf, reg);
-    }
+    // xzl: no longer check for core_regs or not. just let the arch to handle. 
+    // expect it to return 0 if it cannot handle. works for aarch64. make break other archs
+    //error_printf("xzl: read reg id %d\n", reg);
+
+    // if (reg < cc->gdb_num_core_regs) {
+    //     return cc->gdb_read_register(cpu, buf, reg);
+    // }
+    ret = cc->gdb_read_register(cpu, buf, reg);
+    if (ret)
+        return ret; 
+
+    error_printf("xzl: read reg id %d ---> dispatch to get_reg\n", reg);
 
     for (r = cpu->gdb_regs; r; r = r->next) {
         if (r->base_reg <= reg && reg < r->base_reg + r->num_regs) {

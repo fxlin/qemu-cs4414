@@ -36,6 +36,10 @@ int aarch64_cpu_gdb_read_register(CPUState *cs, GByteArray *mem_buf, int n)
         return gdb_get_reg64(mem_buf, env->pc);
     case 33:
         return gdb_get_reg32(mem_buf, pstate_read(env));
+    case 157: // CurrentEL. num from registration time... reliable? 
+        return gdb_get_reg32(mem_buf, arm_current_el(env));    
+    case 160: // DAIF. num from registration time... reliable? 
+        return gdb_get_reg32(mem_buf, env->daif);          
     }
     /* Unknown register.  */
     return 0;

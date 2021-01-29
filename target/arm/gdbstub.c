@@ -143,9 +143,23 @@ static void arm_register_sysreg_for_xml(gpointer key, gpointer value,
     CPUARMState *env = &cpu->env;
     DynamicGDBXMLInfo *dyn_xml = &cpu->dyn_sysreg_xml;
 
+    //error_printf("xzl: check reg %s type %x\n", ri->name, ri->type);
+
+    //if (ri->type & ARM_CP_CURRENTEL) { // not working. other types have these bits set
+    // if (ri->type == 0x481) {
+    
+    // DAIF: env->daif int64, but the reg only has lower bits in useful. I assume 32 bits are fine
+    if (!strncmp(ri->name, "CURRENTEL", 16) || !strncmp(ri->name, "DAIF", 16)) {
+        arm_gen_one_xml_sysreg_tag(s, dyn_xml, ri, ri_key, 32,
+                                           param->n++);
+        error_printf("xzl: reg %s type 0x%x num %d\n", ri->name, ri->type, param->n - 1);
+        return; 
+    }
+
     if (!(ri->type & (ARM_CP_NO_RAW | ARM_CP_NO_GDB))) {
         if (arm_feature(env, ARM_FEATURE_AARCH64)) {
             if (ri->state == ARM_CP_STATE_AA64) {
+                //error_printf("xzl: add reg %s\n", ri->name);
                 arm_gen_one_xml_sysreg_tag(s , dyn_xml, ri, ri_key, 64,
                                            param->n++);
             }

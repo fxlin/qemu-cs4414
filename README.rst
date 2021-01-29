@@ -1,3 +1,6 @@
+(xzl) qemu w/ features for aarch64-based kernel hacking. 
+For UVA cs4414/6456. 
+
 ===========
 QEMU README
 ===========
