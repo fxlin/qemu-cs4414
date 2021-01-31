@@ -34,7 +34,7 @@ int aarch64_cpu_gdb_read_register(CPUState *cs, GByteArray *mem_buf, int n)
         return gdb_get_reg64(mem_buf, env->xregs[31]);
     case 32:
         return gdb_get_reg64(mem_buf, env->pc);
-    case 33:
+    case 33: // xzl: this was sent as the cpsr reg to gdb. however, aarch64 has no cpsr. so for aarch64 it's PSTATE (synthesized)
         return gdb_get_reg32(mem_buf, pstate_read(env));
     case 157: // CurrentEL. num from registration time... reliable? 
         return gdb_get_reg32(mem_buf, arm_current_el(env));    

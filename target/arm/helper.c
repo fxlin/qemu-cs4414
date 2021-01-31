@@ -4749,7 +4749,8 @@ static const ARMCPRegInfo v8_cp_reginfo[] = {
      */
     { .name = "NZCV", .state = ARM_CP_STATE_AA64,
       .opc0 = 3, .opc1 = 3, .opc2 = 0, .crn = 4, .crm = 2,
-      .access = PL0_RW, .type = ARM_CP_NZCV },
+      .access = PL0_RW, .type = ARM_CP_NZCV }, 
+      // xzl: although declared as a reg, NZCV state is spread in env->NF/ZF/CF/VF
     { .name = "DAIF", .state = ARM_CP_STATE_AA64,
       .opc0 = 3, .opc1 = 3, .opc2 = 1, .crn = 4, .crm = 2,
       .type = ARM_CP_NO_RAW,

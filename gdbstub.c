@@ -924,7 +924,7 @@ static int gdb_read_register(CPUState *cpu, GByteArray *buf, int reg)
     if (ret)
         return ret; 
 
-    error_printf("xzl: read reg id %d ---> dispatch to get_reg\n", reg);
+    // error_printf("xzl: read reg id %d ---> dispatch to get_reg\n", reg);
 
     for (r = cpu->gdb_regs; r; r = r->next) {
         if (r->base_reg <= reg && reg < r->base_reg + r->num_regs) {

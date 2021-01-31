@@ -1312,6 +1312,8 @@ static inline unsigned int aarch64_pstate_mode(unsigned int el, bool handler)
 /* Return the current PSTATE value. For the moment we don't support 32<->64 bit
  * interprocessing, so we don't attempt to sync with the cpsr state used by
  * the 32 bit decoder.
+ * 
+ * xzl: no phys reg for PSTATE. the format here assumes that of SPSR_EL1
  */
 static inline uint32_t pstate_read(CPUARMState *env)
 {

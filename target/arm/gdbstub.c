@@ -149,10 +149,13 @@ static void arm_register_sysreg_for_xml(gpointer key, gpointer value,
     // if (ri->type == 0x481) {
     
     // DAIF: env->daif int64, but the reg only has lower bits in useful. I assume 32 bits are fine
-    if (!strncmp(ri->name, "CURRENTEL", 16) || !strncmp(ri->name, "DAIF", 16)) {
+    if (!strncmp(ri->name, "CURRENTEL", 16) 
+        || !strncmp(ri->name, "DAIF", 16)
+        || !strncmp(ri->name, "NZCV", 16)
+        ) {
         arm_gen_one_xml_sysreg_tag(s, dyn_xml, ri, ri_key, 32,
                                            param->n++);
-        error_printf("xzl: reg %s type 0x%x num %d\n", ri->name, ri->type, param->n - 1);
+        // error_printf("xzl: reg %s type 0x%x num %d\n", ri->name, ri->type, param->n - 1);
         return; 
     }
 
