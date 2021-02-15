@@ -20,6 +20,11 @@
 #include "cpu.h"
 #include "exec/gdbstub.h"
 
+// in gdbstub.c
+extern int cs4414_num_CURRENTEL;
+extern int cs4414_num_DAIF; 
+extern int cs4414_num_NZCV; 
+
 int aarch64_cpu_gdb_read_register(CPUState *cs, GByteArray *mem_buf, int n)
 {
     ARMCPU *cpu = ARM_CPU(cs);
@@ -36,11 +41,13 @@ int aarch64_cpu_gdb_read_register(CPUState *cs, GByteArray *mem_buf, int n)
         return gdb_get_reg64(mem_buf, env->pc);
     case 33: // xzl: this was sent as the cpsr reg to gdb. however, aarch64 has no cpsr. so for aarch64 it's PSTATE (synthesized)
         return gdb_get_reg32(mem_buf, pstate_read(env));
-    case 157: // CurrentEL. num from registration time... reliable? 
-        return gdb_get_reg32(mem_buf, arm_current_el(env));    
-    case 160: // DAIF. num from registration time... reliable? 
-        return gdb_get_reg32(mem_buf, env->daif);          
     }
+
+    if (n == cs4414_num_CURRENTEL) // CurrentEL. num from registration time... reliable? 
+        return gdb_get_reg32(mem_buf, arm_current_el(env));    
+    else if (n == cs4414_num_DAIF) // DAIF. num from registration time... reliable? 
+        return gdb_get_reg32(mem_buf, env->daif);          
+        
     /* Unknown register.  */
     return 0;
 }

@@ -132,6 +132,10 @@ static void arm_gen_one_xml_sysreg_tag(GString *s, DynamicGDBXMLInfo *dyn_xml,
     dyn_xml->num++;
 }
 
+int cs4414_num_CURRENTEL = -1; 
+int cs4414_num_DAIF = -1; 
+int cs4414_num_NZCV = -1; 
+
 static void arm_register_sysreg_for_xml(gpointer key, gpointer value,
                                         gpointer p)
 {
@@ -146,17 +150,23 @@ static void arm_register_sysreg_for_xml(gpointer key, gpointer value,
     //error_printf("xzl: check reg %s type %x\n", ri->name, ri->type);
 
     //if (ri->type & ARM_CP_CURRENTEL) { // not working. other types have these bits set
-    // if (ri->type == 0x481) {
-    
-    // DAIF: env->daif int64, but the reg only has lower bits in useful. I assume 32 bits are fine
-    if (!strncmp(ri->name, "CURRENTEL", 16) 
-        || !strncmp(ri->name, "DAIF", 16)
-        || !strncmp(ri->name, "NZCV", 16)
-        ) {
+        
+    if (!strncmp(ri->name, "CURRENTEL", 16)) {
+        cs4414_num_CURRENTEL = param->n;
         arm_gen_one_xml_sysreg_tag(s, dyn_xml, ri, ri_key, 32,
                                            param->n++);
-        error_printf("xzl: reg %s type 0x%x num %d\n", ri->name, ri->type, param->n - 1);
-        return; 
+        // error_printf("xzl: reg %s type 0x%x num %d\n", ri->name, ri->type, param->n - 1);        
+    } else if (!strncmp(ri->name, "DAIF", 16)) { 
+        // DAIF: env->daif int64, but the reg only has lower bits in useful. I assume 32 bits are fine
+        cs4414_num_DAIF = param->n;
+        arm_gen_one_xml_sysreg_tag(s, dyn_xml, ri, ri_key, 32,
+                                           param->n++);
+        // error_printf("xzl: reg %s type 0x%x num %d\n", ri->name, ri->type, param->n - 1);        
+    } else if (!strncmp(ri->name, "NZCV", 16)) {
+        cs4414_num_NZCV = param->n;
+        arm_gen_one_xml_sysreg_tag(s, dyn_xml, ri, ri_key, 32,
+                                           param->n++);
+        // error_printf("xzl: reg %s type 0x%x num %d\n", ri->name, ri->type, param->n - 1);        
     }
 
     if (!(ri->type & (ARM_CP_NO_RAW | ARM_CP_NO_GDB))) {
@@ -165,6 +175,7 @@ static void arm_register_sysreg_for_xml(gpointer key, gpointer value,
                 //error_printf("xzl: add reg %s\n", ri->name);
                 arm_gen_one_xml_sysreg_tag(s , dyn_xml, ri, ri_key, 64,
                                            param->n++);
+                // error_printf("xzl: reg %s type 0x%x num %d\n", ri->name, ri->type, param->n - 1);
             }
         } else {
             if (ri->state == ARM_CP_STATE_AA32) {
@@ -179,6 +190,7 @@ static void arm_register_sysreg_for_xml(gpointer key, gpointer value,
                     arm_gen_one_xml_sysreg_tag(s , dyn_xml, ri, ri_key, 32,
                                                param->n++);
                 }
+                // error_printf("xzl: reg %s type 0x%x num %d\n", ri->name, ri->type, param->n - 1);
             }
         }
     }
