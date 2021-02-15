@@ -14,7 +14,8 @@
 
 /* Copyright string for -version arguments, About dialogs, etc */
 #define QEMU_COPYRIGHT "Copyright (c) 2003-2020 " \
-    "Fabrice Bellard and the QEMU Project developers"
+    "Fabrice Bellard and the QEMU Project developers \n" \
+    "patched for cs4414/6456 aarch64 kernel hacking"
 
 /* Bug reporting information for --help arguments, About dialogs, etc */
 #define QEMU_HELP_BOTTOM \
