@@ -155,7 +155,7 @@ static void arm_register_sysreg_for_xml(gpointer key, gpointer value,
         ) {
         arm_gen_one_xml_sysreg_tag(s, dyn_xml, ri, ri_key, 32,
                                            param->n++);
-        // error_printf("xzl: reg %s type 0x%x num %d\n", ri->name, ri->type, param->n - 1);
+        error_printf("xzl: reg %s type 0x%x num %d\n", ri->name, ri->type, param->n - 1);
         return; 
     }
 
